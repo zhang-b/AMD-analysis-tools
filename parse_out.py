@@ -26,8 +26,8 @@ def parse_out(fname, skip):
             if counter == 1:
                 step_re =  int(tokens[0])
             else:
-                if de > 0:
-                    step_re += math.exp(de/KT)*STEP
+                step_re += math.exp(de/KT)*STEP
+                
             if (counter-1)%skip == 0:
                 o.write("%-20d,"%step)
                 o.write("%20d,"%step_re)
