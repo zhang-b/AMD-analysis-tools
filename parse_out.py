@@ -8,7 +8,7 @@
 import math
 TEMPERATURE = 1898
 KT = 8.314*TEMPERATURE/4184
-STEP = 100
+STEP = 10
 
 def parse_out(fname, skip):
     counter = 0
@@ -19,14 +19,16 @@ def parse_out(fname, skip):
             pass
         else:
             tokens = i.strip().split()
+            step = int(tokens[0])
+            pe = float(tokens[2])
+            be = float(tokens[3])
+            de = float(tokens[4])
             if counter == 1:
                 step_re =  int(tokens[0])
-            step_re += math.exp(float(tokens[4])/KT)*STEP
+            else:
+                if de > 0:
+                    step_re += math.exp(de/KT)*STEP
             if (counter-1)%skip == 0:
-                step = int(tokens[0])
-                pe = float(tokens[2])
-                be = float(tokens[3])
-                de = float(tokens[4])
                 o.write("%-20d,"%step)
                 o.write("%20d,"%step_re)
                 o.write("%20.4f,"%pe)
