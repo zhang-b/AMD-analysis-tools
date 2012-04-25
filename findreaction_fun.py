@@ -1,3 +1,8 @@
+"""
+@version: $0.1$
+@author: Tao Cheng
+@contact: chengtao@sjtu.edu.cn
+"""
 
 import os
 from operator import itemgetter
@@ -11,7 +16,15 @@ class Reaction():
 """     
 
 
-def find_reactions():
+def find_reactions(skip):
+    """
+    find reactions from fragment table (fragment.csv, generated from
+    parse_mol_fun)
+    @param skip: skip n number of frames 
+    @return: no return values
+    @todo: 
+    @attention: fragment.csv is necessary
+    """
     prev = ''
     now = ''
     counter = 0
@@ -19,37 +32,52 @@ def find_reactions():
     f = open("fragment.csv", 'r')
     for i in f:
         if counter == 0:
+            "Get the fragment names from the first line of fragment.csv"
             global MOLTYPES
             MOLTYPES = i.split(',')[1:] 
             for i in range(len(MOLTYPES)):
                 MOLTYPES[i] = MOLTYPES[i].strip()           
         else:
-            step = i.split(',', 1)[0]
-            line = i.split(',', 1)[1]
-            if len(prev) == 0:
-                prev = line
-            now = line
-            if now != prev:
-                parse_reactions(step, prev, now, of)
-            prev = now
+            if (counter-1)%skip == 0:
+                step = i.split(',', 1)[0]
+                line = i.split(',', 1)[1]
+                if len(prev) == 0:
+                    prev = line
+                now = line
+                "There must be a chemical reaction"
+                if now != prev:
+                    parse_reactions(step, prev, now, of)
+                prev = now
         counter += 1
     of.close()
 
 def parse_reactions(step, prev, now, of):
+    """parse the chemical reactions by comparing the previous line
+    and current line.
+    @param step: The step chemcial reaction happens
+    @param prev: previous line
+    @param now: current line
+    @param of: output file
+    @type output: file object 
+    """
     rec = []
     pro = []
     r1 = prev.strip().split(',')
     r2 = now.strip().split(',')
     for i in range(len(r1)):
+        "find the change of fragment"
         if r1[i] != r2[i]:
             n = int(r1[i])-int(r2[i])
             mol = MOLTYPES[i]
             if n > 0:
+                "reactants"
                 rec.append("%d%s"%(n, mol))           
             else:
+                "productions"
                 pro.append("%d%s"%(-n, mol))
     rec.sort()
     pro.sort()
+    "formulate the chemical reactions"
     reaction = ''
     reaction += ' + '.join(rec)        
     reaction += ' = '        
@@ -58,11 +86,20 @@ def parse_reactions(step, prev, now, of):
     of.write(reaction)
 
 def catalog_reactions(fragment):
-    
+    """Read reactions from reaction_types.csv.
+    Find the reactions involve given fragment.
+    This would output the forward reaction ([fragment]_forward.csv),
+    the backward reaction ([fragment]_backward.csv) and the 
+    reaction table.
+    @param fragment: the name of fragment
+    @todo: seperate this function into two functions
+    """
+    "sort the reactions: [reaction] [number]"
     f = open("reactions_sort.csv", 'r')
     reactions = []
     counter = 0
     n = 0
+    ""
     for i in f:
         if counter == 0:
             prev = i
@@ -82,7 +119,7 @@ def catalog_reactions(fragment):
     reactions.append([prev, n])
     #print reactions    
     f.close()
-    
+    "catalog forward and backward reactions"
     o = open('reaction_types.csv', 'w')
     for i in reactions:
         o.write("%-60s,%6d\n"%(i[0].strip(), i[1]))
@@ -107,6 +144,7 @@ def catalog_reactions(fragment):
     #print backward[-1]
     #print forward[-1]
     #print n1, n2, n2-n1
+    "Output the forward and backward reactions"
     o = open("%s_forward.csv"%fragment, 'w')
     for i in forward:
         line = ''
@@ -131,6 +169,7 @@ def catalog_reactions(fragment):
     ignorei = []
     ignorej = []
     
+    "combine the forward and backward reactions to total reactions"
     for i in forward:
         for j in backward:
             mark = 0
@@ -174,7 +213,7 @@ def catalog_reactions(fragment):
     
 #from parse_mol_fun import parse_mol_fun
 #parse_mol_fun('water.mol')
-find_reactions()
+find_reactions(100)
 os.system("sort reactions.csv > reactions_sort.csv")
 
 FRAGMENTS = ['H2O1', 'H2', 'O2', 'H2O2', 'H1', 'O1', 'H1O2', 'H1O1', ]
