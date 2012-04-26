@@ -123,9 +123,29 @@ def sort_fragments(fragments, n):
         for i in range(len(sorted_fragments)-n, len(sorted_fragments)):
             nst.append(sorted_fragments[i][0])
     return nst
-        
-parse_mol_fun('water.mol')
 
+def parse_fragment(fragment, skip):
+    f = open('fragment.csv', 'r')
+    o = open('%s.csv'%fragment, 'w')
+    counter = 0
+    for i in f:
+        if counter == 0:
+            header = [j.strip() for j in i.strip().split(',')]
+            n = header.index(fragment)
+            print header
+        else:
+            tokens = i.strip().split(',')
+            if (counter-1)%skip == 0:
+                o.write("%-12d,%12d\n"%(int(tokens[0]), int(tokens[n])))
+        counter += 1
+    o.close()
+    f.close()
+                    
+#parse_mol_fun('water.mol')
+
+FRAGMENTS = ['H2O1', 'H2', 'O2', 'H2O2', 'H1', 'O1', 'H1O2', 'H1O1', ]
+for i in FRAGMENTS:
+    parse_fragment(i, 100)
 
 
 
