@@ -11,15 +11,22 @@ def parse_mol_fun(fname):
     """
     parse water.mol to plain text. The format is 'step', 'molinfo 1',
     'molinfo 2', ... 'molinfo n'.
+    - read fragments information from water.mol
+    - generate the fragments distribution and obtain all the fragment types
+    - parse the blocks and count the fragment numbers in each time step
+    - output the fragments information to fragment.csv
     @param fname: file to open
-    @retrun: list
+    @return: list
     @todo: extend to a general file reading method
     """
     f = open(fname, 'r')
     flag = True
     block = []
-
-    #initiate conditions
+#===============================================================================
+# - Generate the fragment distributions and obtain a dictionary of {fragment : n}
+# - Sort the dictionary and obtain an ascending sequence nst
+# - Output the head of fragment.csv
+#===============================================================================
     fragments = gen_distribute('water.mol')
     nst = sort_fragments(fragments, len(fragments))
     fragments_output = open("fragment.csv", 'w')
@@ -28,7 +35,9 @@ def parse_mol_fun(fname):
         fragments_output.write("%5s,"%i)
     fragments_output.write('\n')
 
-    #parse block
+#===============================================================================
+# parse the blocks according to 'step' flag and blank flag
+#===============================================================================
     while(flag):
         flag = False
         for i in f:
@@ -48,7 +57,7 @@ def parse_mol_fun(fname):
                 pass
             else:
                 block.append(i.strip())
-    
+    output_fragment(fragments_output, block, nst)
     fragments_output.close()
 
 def output_fragment(of, block, fragments):
@@ -100,6 +109,12 @@ def gen_distribute(fname):
     return fragments
 
 def sort_fragments(fragments, n):
+    """
+    sort the fragments (dictionary) according to the number of n
+    @param fragments: fragments dictionary
+    @param n: only output the first n fragments
+    @return: a list nst
+    """
     nst = []
     sorted_fragments = sorted(fragments.iteritems(), key=operator.itemgetter(1))
     if n > len(sorted_fragments):

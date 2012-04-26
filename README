@@ -1,2 +1,11 @@
-AMD analysis tool is a package to analysis the simulation results of reactive force field (ReaxFF) molecular dynamics simulation using (PureMD simulation package) with implementation of Accelerated Molecular Dynamics by Tao Cheng.
+AMD analysis tool is a package to analysis the simulation results of Accelerated 
+Molecular Dynamics Simulation (AMD) using reactive force field (ReaxFF) 
+MD simulation with Purdue Reactive Molecular Dynamics Program (PuReMD or PURE-MD)
+(PureMwith implementation of AMD by Tao Cheng.
+
+Usage:
+python parse_out.py
+python parse_mol_fun.py
+python find_reactions_fun.py
+
 

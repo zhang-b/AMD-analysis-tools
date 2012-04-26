@@ -1,3 +1,5 @@
+
+
 import math
 from operator import itemgetter, attrgetter
 
@@ -40,7 +42,9 @@ for i in f:
         force = float(tokens[5])
         ener.append([step, en, booste,force])
 f.close()
-    
+
+#load energy information into increase
+
 for i in range(len(increase)):
     s = increase[i][2]/100
     en = ener[s][1]
@@ -62,6 +66,10 @@ sys.path.append("/home/sungroup/Documents/amd/py")
 from parse_mol import parse_mol
 
 def compare(l1, l2):
+    """
+    compare previous fragments (l1) and current fragments (l2)
+    to obtain the chemical reactions
+    """
     react = {}
     pro = {}
     react2 = {}
