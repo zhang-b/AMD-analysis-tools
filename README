@@ -1,11 +1,17 @@
-AMD analysis tool is a package to analysis the simulation results of Accelerated 
-Molecular Dynamics Simulation (AMD) using reactive force field (ReaxFF) 
-MD simulation with Purdue Reactive Molecular Dynamics Program (PuReMD or PURE-MD)
-(PureMwith implementation of AMD by Tao Cheng.
+AMD analysis tool is a python package to analysis the simulation results of Accelerated Molecular Dynamics Simulation (AMD) using reactive force field (ReaxFF) MD simulation with Purdue Reactive Molecular Dynamics Program (PuReMD or PURE-MD). The PuReMD with implementation with AMD can be download from https://github.com/esemble/PuReMD.git.
 
 Usage:
-python parse_out.py
-python parse_mol_fun.py
-python find_reactions_fun.py
 
+If the data files (.mol - fragment file, .out - energy file) are not large ( < 1GB), one can use object-oriented parse_mol_class.py to generate the potential energy, boost energy, boost force, fragment distribution, reweighted fragment distribution and reactions.
+
+python parse_mol_class.py
+
+If the data files are large, one can use functional based parse_out.py, parse_mol_fun.py and find_reactions_fun.py.
+
+#get the potential energy, boost energy, and boost force.
+python parse_out.py 
+#get the fragment table
+python parse_mol_fun.py
+#get the reaction information
+python find_reactions_fun.py
 
