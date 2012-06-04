@@ -27,7 +27,7 @@ def parse_mol_fun(fname):
 # - Sort the dictionary and obtain an ascending sequence nst
 # - Output the head of fragment.csv
 #===============================================================================
-    fragments = gen_distribute('water.mol')
+    fragments = gen_distribute(fname)
     nst = sort_fragments(fragments, len(fragments))
     fragments_output = open("fragment.csv", 'w')
     fragments_output.write("%-20s,"%'step')
@@ -141,12 +141,13 @@ def parse_fragment(fragment, skip):
     o.close()
     f.close()
                     
-#parse_mol_fun('water.mol')
+parse_mol_fun('test.mol')
 
+"""
 FRAGMENTS = ['H2O1', 'H2', 'O2', 'H2O2', 'H1', 'O1', 'H1O2', 'H1O1', ]
 for i in FRAGMENTS:
     parse_fragment(i, 100)
-
+"""
 
 
 

@@ -36,10 +36,10 @@ def find_reactions(skip):
             global MOLTYPES
             MOLTYPES = i.split(',')[1:] 
             for i in range(len(MOLTYPES)):
-                MOLTYPES[i] = MOLTYPES[i].strip()           
+                MOLTYPES[i] = MOLTYPES[i].strip()       
         else:
             if (counter-1)%skip == 0:
-                step = i.split(',', 1)[0]
+                step = int(i.split(',', 1)[0])
                 line = i.split(',', 1)[1]
                 if len(prev) == 0:
                     prev = line
@@ -48,6 +48,15 @@ def find_reactions(skip):
                 if now != prev:
                     parse_reactions(step, prev, now, of)
                 prev = now
+#------------------------------------------------------------------------------ 
+# Stop analysis when the combustion completely finish
+#------------------------------------------------------------------------------ 
+        n = MOLTYPES.index('H2O1')
+        total = now.split(',')
+        if len(total) > n:
+            nh2o = int(total[n])
+            if nh2o == 66:
+                break           
         counter += 1
     of.close()
 
@@ -82,8 +91,7 @@ def parse_reactions(step, prev, now, of):
     reaction += ' + '.join(rec)        
     reaction += ' = '        
     reaction += ' + '.join(pro)        
-    reaction += '\n'
-    of.write(reaction)
+    of.write("%-80s%12d\n"%(reaction, step))
 
 def catalog_reactions(fragment):
     """Read reactions from reaction_types.csv.
@@ -101,10 +109,13 @@ def catalog_reactions(fragment):
     n = 0
     ""
     for i in f:
+        tokens = i.rsplit(' ', 1)
+        step = int(tokens[1])
+        react = tokens[0].strip()
         if counter == 0:
-            prev = i
+            prev = react
             n = 0
-        now = i
+        now = react
         if now == prev:
             n += 1
         else:

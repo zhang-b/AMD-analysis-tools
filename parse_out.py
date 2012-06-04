@@ -53,4 +53,4 @@ def parse_out(fname, skip):
     o.close()
     f.close()
     
-parse_out('water.out', 1000)
+parse_out('test.out', 1000)
