@@ -15,6 +15,7 @@ class Reaction():
         n = 1
 """     
 
+STABLE = ["H2", "O2", "H2O1", "H2O2"]
 
 def find_reactions(skip):
     """
@@ -73,7 +74,11 @@ def parse_reactions(step, prev, now, of):
     pro = []
     r1 = prev.strip().split(',')
     r2 = now.strip().split(',')
-    for i in range(len(r1)):
+    nrad = 0
+    for i in range(len(r1) - 1):
+        "find the radicals"
+        if MOLTYPES[i] not in STABLE:
+            nrad += int(r1[i])
         "find the change of fragment"
         if r1[i] != r2[i]:
             n = int(r1[i])-int(r2[i])
@@ -91,7 +96,11 @@ def parse_reactions(step, prev, now, of):
     reaction += ' + '.join(rec)        
     reaction += ' = '        
     reaction += ' + '.join(pro)        
-    of.write("%-80s%12d\n"%(reaction, step))
+    of.write("%-80s%12d"%(reaction, step))
+    if nrad == 0:
+        of.write("    # intial")
+    of.write("\n")
+  
 
 def catalog_reactions(fragment):
     """Read reactions from reaction_types.csv.
@@ -109,7 +118,12 @@ def catalog_reactions(fragment):
     n = 0
     ""
     for i in f:
-        tokens = i.rsplit(' ', 1)
+        if "#" in i:
+            tokens = i.rsplit("#",1)
+            tokens = tokens[0].strip().rsplit(' ', 1)
+        else:
+            tokens = i.rsplit(' ', 1)
+        print tokens
         step = int(tokens[1])
         react = tokens[0].strip()
         if counter == 0:
@@ -227,6 +241,6 @@ def catalog_reactions(fragment):
 find_reactions(100)
 os.system("sort reactions.csv > reactions_sort.csv")
 
-FRAGMENTS = ['H2O1', 'H2', 'O2', 'H2O2', 'H1', 'O1', 'H1O2', 'H1O1', ]
+FRAGMENTS = ['H2O1', 'H2', 'O2', 'H2O2', 'H1', 'O1', 'H1O2', 'H1O1', "H3O1" ]
 for i in FRAGMENTS:
     catalog_reactions(i)

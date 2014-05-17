@@ -141,13 +141,13 @@ def parse_fragment(fragment, skip):
     o.close()
     f.close()
                     
-parse_mol_fun('test.mol')
+parse_mol_fun('water.mol')
 
-"""
 FRAGMENTS = ['H2O1', 'H2', 'O2', 'H2O2', 'H1', 'O1', 'H1O2', 'H1O1', ]
+#FRAGMENTS = ['H3O1']
+#FRAGMENTS = ["C3H6O3"]
+#FRAGMENTS = ['C1026H102', 'C3H9N4', 'C1026H102N2', 'C2H6N4', 'C1H3N4', 'C1024H96', 'C1025H99', 'C2H6', 'C1025H99N2', 'C3H9N2', 'N2', 'C1H3N2', 'C2H6N2', 'C1H3']
+#FRAGMENTS = ['O2', "O1"]
 for i in FRAGMENTS:
-    parse_fragment(i, 100)
-"""
-
-
+    parse_fragment(i, 1)
 
